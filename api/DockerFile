@@ -1,0 +1,23 @@
+    FROM ruby:3..4.7
+    
+    WORKDIR /app
+
+    # Install necessary packages for Rails and MySQL client
+    RUN apt-get update -qq && \
+        apt-get install --no-install-recommends -y build-essential libmysqlclient-dev nodejs npm && \
+        rm -rf /var/lib/apt/lists/*
+
+    # Copy Gemfile and Gemfile.lock
+    COPY Gemfile Gemfile.lock ./
+
+    # Install gems
+    RUN bundle install
+
+    # Copy the rest of the application code
+    COPY . .
+
+    # Expose the port Rails will run on
+    EXPOSE 3000
+
+    # Command to run the Rails server
+    CMD ["rails", "server", "-b", "0.0.0.0"]
