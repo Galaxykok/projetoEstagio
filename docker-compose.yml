@@ -5,8 +5,8 @@ services:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
-      MYSQL_DATABASE: my_database
+      MYSQL_ROOT_PASSWORD: galaxy
+      MYSQL_DATABASE: db
     ports:
       - "3306:3306"
     volumes:
@@ -24,6 +24,6 @@ web:
           - db
         environment:
           DATABASE_HOST: db
-          DATABASE_USERNAME: Galaxy
-          DATABASE_PASSWORD: Galaxy
-          DATABASE_NAME: Galaxy
+          DATABASE_USERNAME: galaxy
+          DATABASE_PASSWORD: galaxy
+          DATABASE_NAME: galaxy
