@@ -1,5 +1,5 @@
 # Usa uma imagem oficial do Ruby
-FROM ruby:3.3
+FROM ruby:3.4.7
 
 # Instala dependências do sistema
 RUN apt-get update -qq && apt-get install -y \
