@@ -1,23 +1,31 @@
-    FROM ruby:3..4.7
-    
-    WORKDIR /app
+# Usa uma imagem oficial do Ruby
+FROM ruby:3.3
 
-    # Install necessary packages for Rails and MySQL client
-    RUN apt-get update -qq && \
-        apt-get install --no-install-recommends -y build-essential libmysqlclient-dev nodejs npm && \
-        rm -rf /var/lib/apt/lists/*
+# Instala dependências do sistema
+RUN apt-get update -qq && apt-get install -y \
+  nodejs \
+  default-mysql-client \
+  build-essential \
+  libpq-dev \
+  libxml2-dev \
+  libxslt1-dev \
+  libffi-dev \
+  && rm -rf /var/lib/apt/lists/*
 
-    # Copy Gemfile and Gemfile.lock
-    COPY Gemfile Gemfile.lock ./
+# Define diretório de trabalho
+WORKDIR /app
 
-    # Install gems
-    RUN bundle install
+# Copia Gemfile e Gemfile.lock primeiro (para cache de bundler)
+COPY produtos/Gemfile* ./
 
-    # Copy the rest of the application code
-    COPY . .
+# Instala gems
+RUN bundle install
 
-    # Expose the port Rails will run on
-    EXPOSE 3000
+# Copia todo o restante do projeto
+COPY . .
 
-    # Command to run the Rails server
-    CMD ["rails", "server", "-b", "0.0.0.0"]
+# Expõe a porta padrão do Rails
+EXPOSE 3000
+
+# Comando padrão
+CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
