@@ -1,11 +1,20 @@
 class Produto < ApplicationRecord
-    self.primary_key = "id"
+    validates :nome, presence: { message: "nome não pode ser vazio" }
+    validates :preco, presence: { message: "preço não pode ser vazio" },
+                    numericality: { greater_than_or_equal_to: 0, message: "preço deve ser um número positivo" }
+    validates :descricao, presence: { message: "descrição não pode ser vazia" }
 
-    before_create :set_uuid
+    validate :validar_tamanho_imagem
 
-    validates :nome, :preco, :descricao, presence: true
+     private
 
-    private
-    def set_uuid
-    self.id ||= SecureRandom.uuid
+    def validar_tamanho_imagem
+        return if imagem.blank?
+
+        tamanho_bytes = imagem.bytesize
+
+        if tamanho_bytes > 2.megabytes
+            errors.add(:imagem, "deve ter no máximo 2MB")
+        end
+    end
 end
